@@ -1,0 +1,47 @@
+body {
+    background: lightblue;
+    color: black;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 18px;
+}
+
+.padOnePercent {
+    padding-bottom: 1%;
+}
+
+.content {
+    background: white;
+    width: 92%;
+    border-radius: 15px;
+    margin: 0 auto; 
+    padding: 1%;
+    border: 2px ridge black
+}
+
+.h1Title {
+    text-align: center;
+    font-size: 40px;
+    text-decoration: underline;
+    padding-bottom: 20px;
+}
+
+h1 {
+    font-size: 30px;
+}
+
+h2 {
+    font-size: 25px;
+}
+
+h3 {
+    font-size: 20px;
+}
+
+/*
+font-family: Helvetica, Arial, sans-serif;
+font-family: Arial, Helvetica, sans-serif;
+font-family: Verdana, Tahoma, sans-serif;
+font-family: Tahoma, Verdana, sans-serif;
+font-family: 'Times New Roman', Times, serif, serif;
+font-family: Georgia, 'Times New Roman', Times, serif;
+*/
