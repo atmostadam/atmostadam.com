@@ -18,30 +18,164 @@ body {
     border: 2px ridge black
 }
 
-.h1Title {
+.border-table {
+    float: left;
+    width: 60%;
+    margin: 0 auto; 
+    border: 1px black;
+}
+
+.border-row {
+    float: left;
+    width: 60%;
+    border: 1px black;
+}
+
+
+.border-cell {
+    float: left;
+    width: 20%;
+    border: 1px black;
+}
+
+.border-cell-green {
+    float: left;
+    width: 30%;
+    border: 1px black;
+    color: green;
+}
+
+.h0-center {
     text-align: center;
-    font-size: 40px;
-    text-decoration: underline;
+    font-family: Tahoma, Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 64px;
+}
+
+.h0-center-blue {
+    text-align: center;
+    font-family: Tahoma, Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 64px;
+    color: #128EF3;
+}
+
+.h0-center-green {
+    text-align: center;
+    font-family: Tahoma, Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 64px;
+    color: green;
+}
+
+.h1-center {
+    text-align: center;
+    font-family: Tahoma, Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 48px;   
+}
+
+.h1-center-blue {
+    text-align: center;
+    font-family: Tahoma, Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 48px;
+    color: #128EF3;
+}
+
+.h1-center-green {
+    text-align: center;
+    font-family: Tahoma, Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 48px;
+    color: green;
+}
+
+.h2-center-blue {
+    text-align: center;
+    font-family: Tahoma, Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 32px;
+    color: #128EF3;
+}
+
+.h3-center {
+    text-align: center;
+    font-family: Tahoma, Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.br {
+    padding-top: 20px;
     padding-bottom: 20px;
 }
 
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    font-size: 26px;
+}
+
+.td-investment {
+    width: 20%;
+}
+
+.td-value {
+    width: 20%;
+    font-weight: bold;
+    color: green;
+}
+
+.td-interest {
+    width: 10%;
+}
+
+.td-notes {
+    width: 40%;
+}
+
+.h1Title {
+    font-family: Tahoma, Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 38px;
+}
+
+.h2Title {
+    font-family: Tahoma, Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 24px;
+    color: #128EF3;
+}
+
+.titleLink {
+    font-family: Tahoma, Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    color: #128EF3;
+}
+
 h1 {
-    font-size: 30px;
+    padding: 0;
 }
 
 h2 {
-    font-size: 25px;
+    padding: 0;
 }
 
 h3 {
     font-size: 20px;
 }
 
-/*
-font-family: Helvetica, Arial, sans-serif;
-font-family: Arial, Helvetica, sans-serif;
-font-family: Verdana, Tahoma, sans-serif;
-font-family: Tahoma, Verdana, sans-serif;
-font-family: 'Times New Roman', Times, serif, serif;
-font-family: Georgia, 'Times New Roman', Times, serif;
-*/
+hr {
+    height: 2px;
+    background-color:black;
+    border: none;
+}
+
+.fontHelvetica { font-family: Helvetica, Arial, sans-serif; }
+.fontArial { font-family: Arial, Helvetica, sans-serif; }
+.fontVerdana { font-family: Verdana, Tahoma, sans-serif; }
+.fontTahoma { font-family: Tahoma, Verdana, sans-serif; }
+.fontTimes { font-family: 'Times New Roman', Times, serif, serif; }
+.fontGeorgia { font-family: Georgia, 'Times New Roman', Times, serif; }

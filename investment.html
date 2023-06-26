@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>TOP CHEF JR.</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/default.css">
+    <script>
+      const HISTORICAL_NYSE_RATE = 0.10;
+      const HISTORICAL_HEDGE_FUND_RATE = 0.137;
+      const FINANCIAL_ADVISOR_FEES = -0.01;
+      const HEDGE_FUND_FEES = -0.016;
+      const ETF_FEES = -0.006;
+      const CAPITAL_GAINS_TAX = -0.15;
+      const INCOME_TAX = -0.28;
+
+      class Investment {
+        constructor(name, rate, worth, taxes, fees, familyOwns, special) {
+          this.name = name;
+          this.rate = rate;
+          this.worth = worth;
+          this.taxes = taxes;
+          this.fees = fees;
+          this.familyOwns = familyOwns;
+          this.special = special;
+        }
+      }
+      
+      let investments = [
+        new Investment("PhD Degree", 1, "$1.5 million", CAPITAL_GAINS_TAX, ETF_FEES, true, "Payback starts immediately"),
+        new Investment("Master's Degree", 1, "$15,490,739", CAPITAL_GAINS_TAX, ETF_FEES, true, "Payback starts immediately"),
+        new Investment("Bachelor’s Degree", 1, "$9,958,333", CAPITAL_GAINS_TAX, ETF_FEES, true, "Payback starts immediately"),
+        new Investment("Hedge Funds", HISTORICAL_HEDGE_FUND_RATE, "*", CAPITAL_GAINS_TAX, HEDGE_FUND_FEES, false, "Requires $2,000,000+ initial investment"),
+        new Investment("529 College Savings Plan", HISTORICAL_NYSE_RATE, "*", 0, ETF_FEES, true, "No Taxes, No Fees, Investment is a Tax Write-Off, Can only be spent on Education"),
+        new Investment("Roth IRA Retirement Plan", HISTORICAL_NYSE_RATE, "*", 0, ETF_FEES, true, "No Taxes on Interest. Max of $5,500 per year."),
+        new Investment("401k Retirement Plan", HISTORICAL_NYSE_RATE, "*", 0, ETF_FEES, true, "No Taxes Until Age 60. Max of $19,000 per year."),
+        new Investment("Personal Diversified Stock Portfolio", HISTORICAL_NYSE_RATE, null, CAPITAL_GAINS_TAX, ETF_FEES, true, ""),
+        new Investment("Financial Advisor Diversified Stock Portfolio", HISTORICAL_NYSE_RATE, null, CAPITAL_GAINS_TAX, FINANCIAL_ADVISOR_FEES, false, ""),
+        new Investment("Gold", 0.0778, "*", CAPITAL_GAINS_TAX, -0.25, false, "Cost: 25% when buying; 12% when selling. Average 10-year return on gold was 0.92%"),
+        new Investment("Platinum", 0.028, null, CAPITAL_GAINS_TAX, -0.25, false, "Cost: 25% when buying; 12% when selling. 10-year best average, the rate of return for this precious metal jumps to 13.2%"),
+        new Investment("Diamonds", 0.064, null, CAPITAL_GAINS_TAX, -0.25, false, "Cost: 25% when buying; 12% when selling. Average annual real rate of return on white diamonds was 6.4%, while that on diamonds in fancy colors was 2.9%"),
+        new Investment("Paintings", 0.053, null, CAPITAL_GAINS_TAX, -0.25, false, "Cost: 25% when buying; 10% when selling. Over the past 20 years, the Mei Moses World All Art Index posted a compounded annual return of 5.3%"),
+        new Investment("Commodities", -0.05, null, CAPITAL_GAINS_TAX, ETF_FEES, false, "Approximately -5% in recent years. Requires an accountant as livestock tax forms are complicated."),
+        new Investment("International Diversified Portfolio", 0.05, "*", CAPITAL_GAINS_TAX, ETF_FEES, true, "Mom & Dad Only Make Minor Investments, but must pay foreign taxes."),
+        new Investment("International Emerging Market Stocks", 0.0326, "*", CAPITAL_GAINS_TAX, ETF_FEES, true, "Mom & Dad Only Make Minor Investments, but must pay foreign taxes."),
+        new Investment("CDs", 0.05, null, CAPITAL_GAINS_TAX, 0, false, ""),
+        new Investment("Options", 0, "$50,000", CAPITAL_GAINS_TAX, 0, false, "Avoid. This is simliar to gambling. Approximately 60% AI Algorithms."),
+        new Investment("Junk Bonds", 0.042, null, CAPITAL_GAINS_TAX, ETF_FEES, false, ""),
+        new Investment("Crypto Currency", -0.1577, null, CAPITAL_GAINS_TAX, ETF_FEES, false, ""),
+        new Investment("Savings Account", 0.02, null, INCOME_TAX, 0, true, ""),
+        new Investment("Lock it in a Safe", 0, "$50,000", 0, 0, false, ""),
+        new Investment("Checking Account", 0, "$50,000", 0, 0, true, ""),
+        new Investment("Foreign Exchange Currency Trading", 0.02, null, CAPITAL_GAINS_TAX, 0, false, "This should not be done by individuals. Instead, this is a full time career in Finance to trade millions or billions of currency at a time. Leave this to financial institutions, governments and oil companies."),
+        new Investment("Time-Shares", -1, null, -0.32, -1, true,  "Avoid. This is a lifetime liability and a Cost NOT an Investment.")
+      ];
+
+      function calculateCompoundInterest(principal, rate, time) {
+        var total = principal * Math.pow(1 + rate / 100, time);
+        
+        return total.toLocaleString("en-US",
+        {
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0
+})
+      } 
+
+      function createTD(newTR, cellData, rate) {
+        var newTD = document.createElement("td");
+        if(rate > 0) {
+          newTD.style.color = "green";
+          newTD.style.fontWeight = "bold";
+        } else if(rate < 0) {
+          newTD.style.color = "red";
+          newTD.style.fontWeight = "bold";
+        } else {
+          newTD.style.color = "black";
+        }
+        newTD.appendChild(document.createTextNode(cellData));
+        newTR.appendChild(newTD);
+      }
+
+      function createRows() {
+        var summary = document.getElementById("summaryTable");
+        investments.sort((a, b) => {
+          return b.rate - a.rate;
+        });
+        investments.forEach(rowData => {
+          var newTR = document.createElement("tr");
+          createTD(newTR, rowData.name);
+          createTD(newTR, (rowData.rate * 100).toFixed(2) + "%", rowData.rate);
+          if(null === rowData.worth) {
+            createTD(newTR, "$" + calculateCompoundInterest(50000, rowData.rate * 100, 40), rowData.rate);
+          } else if("*" === rowData.worth) {
+            createTD(newTR, "$" + calculateCompoundInterest(50000, rowData.rate * 100, 40) + "*", rowData.rate);
+          } else {
+            createTD(newTR, rowData.worth, rowData.rate);
+          }
+          createTD(newTR, (rowData.taxes * 100).toFixed(2) + "%", rowData.taxes);
+          createTD(newTR, (rowData.fees * 100).toFixed(2) + "%", rowData.fees);
+          createTD(newTR, rowData.familyOwns);
+          createTD(newTR, rowData.special);
+          summary.appendChild(newTR);
+        });
+      }
+    </script>
+  </head>
+  <body onload="createRows()">
+    <div class="padOnePercent"></div>
+    <div class="content">
+      <div class="h0-center-blue">TOP CHEF JR. 2023</div>
+      <div class="h0-center">*** Rachel Johnston ***</div>
+      <div class="h0-center-blue">WINNER!</div>
+      <div style="text-align: center;"><img src="images/rachel-wins.jpg" /></div>
+      <div class="h0-center-green">$50,000 Prize</div>
+      <div class="br"></div>
+      <hr />
+      <div class="br"></div>
+      <div class="h2-center-blue">Rachel will invest the $50,000</div>
+    </div>
+    <div class="br"></div>
+    <div class="br"></div>
+    <div class="br"></div>
+    <div class="padOnePercent"></div>
+    <div class="content">
+      <div style="text-align: center;"><img src="images/einstein-interest.jpg" /></div>
+    </div>
+    <div class="br"></div>
+    <div class="br"></div>
+    <div class="br"></div>
+    <div class="padOnePercent"></div>
+    <div class="content">
+      <div class="br"></div>
+      <table id="summaryTable">
+        <tr>
+          <td style="background-color: blue; color: white; font-weight: bold;">Name</td>
+          <td style="background-color: blue; color: white; font-weight: bold;">Rate</td>
+          <td style="background-color: blue; color: white; font-weight: bold;">Worth after 40</td>
+          <td style="background-color: blue; color: white; font-weight: bold;">Taxes</td>
+          <td style="background-color: blue; color: white; font-weight: bold;">Fees</td>
+          <td style="background-color: blue; color: white; font-weight: bold;">Family Owns</td>
+          <td style="background-color: blue; color: white; font-weight: bold;">Special</td>
+        </tr>
+      </table>
+      <div class="br"></div>
+    </div>
+    <div class="padOnePercent"></div>
+    <div class="br"></div>
+    <div class="br"></div>
+    <div class="br"></div>
+    <div class="content">
+      <div class="h0-center">Improve Lifetime Income</div>
+      <div class="br"></div>
+      <hr />
+      <div class="br"></div>
+      <div class="h0-center">2 College Degrees</div>
+      <div class="h1-center-green">$35,000 per year</div>
+      <div class="h1-center-blue">Million @ Age 39</div>
+      <div class="h3-center">Source: Social Security Administration: $1,400,000 over 40 years</div>
+      <div class="br"></div>
+      <hr />
+      <div class="br"></div>
+      <div class="h0-center">College Degree</div>
+      <div class="h1-center-green">$22,222 per year</div>
+      <div class="h1-center-blue">Million @ Age 55</div>
+      <div class="h3-center">Source: Social Security Administration: $900,000 over 40 years</div>
+    </div>
+    <div class="padOnePercent"></div>
+    <div class="padOnePercent"></div>
+    <div class="content">
+      <div class="h0-center">Investments With Government Tax Breaks, Deferrals and Write-Offs</div>
+      <div class="br"></div>
+      <hr />
+      <div class="br"></div>
+      <div class="h1-center">College Savings Account - Tax Free & Tax Deductible (529 Plan)</div>
+      <div class="h1-center-green">10% and Tax Free</div>
+      <div class="h1-center-blue">Million @ Age 39</div>
+      <div class="h3-center">Source: Georgia 529 Plan</div>
+      <div class="br"></div>
+      <hr />
+      <div class="br"></div>
+      <div class="h1-center">Retirement Account - Tax Free Interest (Roth IRA)</div>
+      <div class="h1-center-green">10% and Tax Free on Compound Interest</div>
+      <div class="h1-center-blue">Million @ Age 39</div>
+      <div class="h3-center">Source: Google AI</div>
+      <div class="br"></div>
+      <hr />
+      <div class="br"></div>
+      <div class="h1-center">Retirement Account - Tax Free Until Age 60 (401k)</div>
+      <div class="h1-center-green">10% and Tax Free Until 60</div>
+      <div class="h1-center-blue">Million @ Age 39</div>
+      <div class="h3-center">Source: Social Security Administration: $1,400,000 over 40 years</div>
+    </div>
+    <div class="padOnePercent"></div>
+    <div class="padOnePercent"></div>
+    <div class="content">
+      <div class="h0-center">Investments That Government Taxes</div>
+      <div class="br"></div>
+      <hr />
+      <div class="br"></div>
+      <div class="h1-center">Hedge Fund</div>
+      <div class="h1-center-green">13.7% per year</div>
+      <div class="h1-center-blue">Million @ Age ?</div>
+      <div class="h3-center">Source: Google AI</div>
+      <div class="br"></div>
+      <hr />
+      <div class="br"></div>
+      <div class="h1-center">Mommy & Daddy's Diversified ETF Investment Strategy</div>
+      <div class="h1-center-green">10% per year</div>
+      <div class="h1-center-blue">Million @ Age ?</div>
+      <div class="h3-center">Source: Google AI</div>
+    </div>
+    <div class="padOnePercent"></div>
+    <div class="padOnePercent"></div>
+    <div class="content">
+      <div class="h0-center">Rate of Return Less Than Increases in prices</div>
+      <div class="br"></div>
+      <hr />
+      <div class="br"></div>
+      <div class="h1-center">Putting money in a safe</div>
+    </div>
+    <div class="padOnePercent"></div>
+    <div class="padOnePercent"></div>
+    <div class="content">
+      <div class="h0-center">LIES!!! Investments That Are Actually Costs</div>
+      <div class="br"></div>
+      <hr />
+      <div class="br"></div>
+      <div class="h1-center">Hedge Fund</div>
+
+house
+car
+boat
+motorcycle
+most paintings
+most jewels
+
+    </div>
+  </body>
+</html>
