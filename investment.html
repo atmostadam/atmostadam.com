@@ -4,6 +4,7 @@
     <title>TOP CHEF JR.</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="css/default.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
       const HISTORICAL_NYSE_RATE = 0.10;
       const HISTORICAL_HEDGE_FUND_RATE = 0.137;
@@ -50,7 +51,19 @@
         new Investment("Lock it in a Safe", 0, "$50,000", 0, 0, false, ""),
         new Investment("Checking Account", 0, "$50,000", 0, 0, true, ""),
         new Investment("Foreign Exchange Currency Trading", 0.02, null, CAPITAL_GAINS_TAX, 0, false, "This should not be done by individuals. Instead, this is a full time career in Finance to trade millions or billions of currency at a time. Leave this to financial institutions, governments and oil companies."),
-        new Investment("Time-Shares", -1, null, -0.32, -1, true,  "Avoid. This is a lifetime liability and a Cost NOT an Investment.")
+        new Investment("Time-Shares", -1, null, -0.32, -1, true,  "Avoid. This is a lifetime liability and a Cost NOT an Investment."),
+        new Investment("Life Insurance Policy", 0.01, null, -0.28, 0, false, ""),
+        new Investment("Treasury Bills", 0.0377, null, -0.28, false, ""),
+        new Investment("Short Term Government bonds", 0.032, null, -0.28, 0, false, ""),
+        new Investment("Long Term Government bonds", 0.0554, null, -0.28, 0, false, ""),
+        new Investment("Corporate Bonds", 0.0602, null, -0.28, 0, false, ""),
+        new Investment("Loan to family member", 0.09, null, -0.28, -0.42, false, "Legally, you must charge at least 9% interest or pay taxes (applicable federal rate).  42% never pay back."),
+        new Investment("Rental House", 0, null,  -0.28, 0, false, "Real Estate Fees, Property Taxes, Property Management, Mortgage Interest, Tenant Damage, Accountant for Tax Breaks. Can improve investment in a hedge situation, tax breaks or full time job."),
+        new Investment("Junk Bonds", 0.042, null, -0.28, 0, false, ""),
+        new Investment("Start a Business", -0.70, null, -0.21, 0, false, "7 of 10 businesses fail. However, a brilliant idea is always worth persuing and the right entrepreneur can get close to a 100% chance of success. A very, very small chance to become rich, but more people lose everything."),
+        new Investment("Venture Capital", 0.25, null, -0.21, 0, false, "Requires $100,000,000 to start"),
+        new Investment("House", 0, null, -0.0774, -0.0099, "With only appropriate upgrades, they can make money after house is paid off.  Will lose lots of money while there is a mortgage."),
+        new Investment("Car", -0.12, null, -0.066, -0.09, "")
       ];
 
       function calculateCompoundInterest(principal, rate, time) {
@@ -58,9 +71,44 @@
         
         return total.toLocaleString("en-US",
         {
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 0
-})
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0
+        })
+      }
+
+      function createCompoundInterestGraph(newChartName, principal, interestRate, time) {
+        // Create an array to store the values of the principal over time.
+        var values = [];
+        
+        // Iterate over the time period.
+        for (var i = 0; i < time; i++) {
+          // Calculate the new principal value.
+          var newPrincipal = principal * (1 + interestRate / 100) ** i;
+          // Add the new principal value to the array.
+          values.push(newPrincipal);
+        }
+        
+        // Create a chart object.
+        var chart = new Chart(document.getElementById(newChartName), {
+          type: "line",
+          data: {
+            labels: [...Array(time).keys()],
+            datasets: [{
+              data: values,
+              fill: false,
+              lineTension: 0.1,
+              color: "blue"
+            }]
+          },
+          options: {
+            title: "Compound Interest Graph",
+            xAxisLabel: "Time (years)",
+            yAxisLabel: "Principal (\$)",
+            legend: {
+              display: false
+            }
+          }
+        });
       } 
 
       function createTD(newTR, cellData, rate) {
@@ -79,10 +127,6 @@
       }
 
       function createRows() {
-        var summary = document.getElementById("summaryTable");
-        investments.sort((a, b) => {
-          return b.rate - a.rate;
-        });
         investments.forEach(rowData => {
           var newTR = document.createElement("tr");
           createTD(newTR, rowData.name);
@@ -98,12 +142,71 @@
           createTD(newTR, (rowData.fees * 100).toFixed(2) + "%", rowData.fees);
           createTD(newTR, rowData.familyOwns);
           createTD(newTR, rowData.special);
-          summary.appendChild(newTR);
+          document.getElementById("summaryTable").appendChild(newTR);
         });
+      }
+
+      function createDivs() {
+        var i = 0;
+        investments.forEach(rowData => {
+          var newPadDiv = document.createElement("div");
+          newPadDiv.className = "padOnePercent";
+          document.body.appendChild(newPadDiv);
+
+          var newContentDiv = document.createElement("div");
+          newContentDiv.className = "content";
+
+          var newH0CenterDiv = document.createElement("div");
+          newH0CenterDiv.className = "h0-center";
+          newH0CenterDiv.appendChild(document.createTextNode(rowData.name));
+          newContentDiv.appendChild(newH0CenterDiv);
+
+          var netWorth;
+          if(null === rowData.worth) {
+            netWorth = "$" + calculateCompoundInterest(50000, rowData.rate * 100, 40);
+          } else if("*" === rowData.worth) {
+            netWorth = "$" + calculateCompoundInterest(50000, rowData.rate * 100, 40) + "*";
+          } else {
+            netWorth = rowData.worth;
+          }
+
+          var newH1CenterGreenDiv = document.createElement("div");
+          newH1CenterGreenDiv.className = "h1-center-green";
+          newH1CenterGreenDiv.appendChild(document.createTextNode(netWorth));
+          newContentDiv.appendChild(newH1CenterGreenDiv);
+
+          var newH1CenterBlueDiv = document.createElement("div");
+          newH1CenterBlueDiv.className = "h1-center-blue";
+          newH1CenterBlueDiv.appendChild(document.createTextNode(rowData.rate * 100 + "%"));
+          newContentDiv.appendChild(newH1CenterBlueDiv);
+
+          var newH3CenterDiv = document.createElement("div");
+          newH3CenterDiv.className = "h3-center";
+          newH3CenterDiv.appendChild(document.createTextNode(rowData.special));
+          newContentDiv.appendChild(newH3CenterDiv);
+
+          var newCanvas = document.createElement("canvas");
+          newCanvas.id = "investment-canvas-" + i;
+          newContentDiv.appendChild(newCanvas);
+ 
+          document.body.appendChild(newContentDiv);
+
+          createCompoundInterestGraph("investment-canvas-" + i, 50000, rowData.rate * 100, 40);
+          
+          i++;
+        });
+      }
+
+      function init() {
+        investments.sort((a, b) => {
+          return b.rate - a.rate;
+        });
+        createRows();
+        createDivs();
       }
     </script>
   </head>
-  <body onload="createRows()">
+  <body onload="init()">
     <div class="padOnePercent"></div>
     <div class="content">
       <div class="h0-center-blue">TOP CHEF JR. 2023</div>
@@ -146,93 +249,6 @@
     <div class="br"></div>
     <div class="br"></div>
     <div class="br"></div>
-    <div class="content">
-      <div class="h0-center">Improve Lifetime Income</div>
-      <div class="br"></div>
-      <hr />
-      <div class="br"></div>
-      <div class="h0-center">2 College Degrees</div>
-      <div class="h1-center-green">$35,000 per year</div>
-      <div class="h1-center-blue">Million @ Age 39</div>
-      <div class="h3-center">Source: Social Security Administration: $1,400,000 over 40 years</div>
-      <div class="br"></div>
-      <hr />
-      <div class="br"></div>
-      <div class="h0-center">College Degree</div>
-      <div class="h1-center-green">$22,222 per year</div>
-      <div class="h1-center-blue">Million @ Age 55</div>
-      <div class="h3-center">Source: Social Security Administration: $900,000 over 40 years</div>
-    </div>
     <div class="padOnePercent"></div>
-    <div class="padOnePercent"></div>
-    <div class="content">
-      <div class="h0-center">Investments With Government Tax Breaks, Deferrals and Write-Offs</div>
-      <div class="br"></div>
-      <hr />
-      <div class="br"></div>
-      <div class="h1-center">College Savings Account - Tax Free & Tax Deductible (529 Plan)</div>
-      <div class="h1-center-green">10% and Tax Free</div>
-      <div class="h1-center-blue">Million @ Age 39</div>
-      <div class="h3-center">Source: Georgia 529 Plan</div>
-      <div class="br"></div>
-      <hr />
-      <div class="br"></div>
-      <div class="h1-center">Retirement Account - Tax Free Interest (Roth IRA)</div>
-      <div class="h1-center-green">10% and Tax Free on Compound Interest</div>
-      <div class="h1-center-blue">Million @ Age 39</div>
-      <div class="h3-center">Source: Google AI</div>
-      <div class="br"></div>
-      <hr />
-      <div class="br"></div>
-      <div class="h1-center">Retirement Account - Tax Free Until Age 60 (401k)</div>
-      <div class="h1-center-green">10% and Tax Free Until 60</div>
-      <div class="h1-center-blue">Million @ Age 39</div>
-      <div class="h3-center">Source: Social Security Administration: $1,400,000 over 40 years</div>
-    </div>
-    <div class="padOnePercent"></div>
-    <div class="padOnePercent"></div>
-    <div class="content">
-      <div class="h0-center">Investments That Government Taxes</div>
-      <div class="br"></div>
-      <hr />
-      <div class="br"></div>
-      <div class="h1-center">Hedge Fund</div>
-      <div class="h1-center-green">13.7% per year</div>
-      <div class="h1-center-blue">Million @ Age ?</div>
-      <div class="h3-center">Source: Google AI</div>
-      <div class="br"></div>
-      <hr />
-      <div class="br"></div>
-      <div class="h1-center">Mommy & Daddy's Diversified ETF Investment Strategy</div>
-      <div class="h1-center-green">10% per year</div>
-      <div class="h1-center-blue">Million @ Age ?</div>
-      <div class="h3-center">Source: Google AI</div>
-    </div>
-    <div class="padOnePercent"></div>
-    <div class="padOnePercent"></div>
-    <div class="content">
-      <div class="h0-center">Rate of Return Less Than Increases in prices</div>
-      <div class="br"></div>
-      <hr />
-      <div class="br"></div>
-      <div class="h1-center">Putting money in a safe</div>
-    </div>
-    <div class="padOnePercent"></div>
-    <div class="padOnePercent"></div>
-    <div class="content">
-      <div class="h0-center">LIES!!! Investments That Are Actually Costs</div>
-      <div class="br"></div>
-      <hr />
-      <div class="br"></div>
-      <div class="h1-center">Hedge Fund</div>
-
-house
-car
-boat
-motorcycle
-most paintings
-most jewels
-
-    </div>
   </body>
 </html>
